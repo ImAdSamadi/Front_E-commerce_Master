@@ -1,0 +1,25 @@
+<div class="container-fluid pt-5 pb-3">
+  <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Categories</span></h2>
+  <div class="row px-xl-5 pb-3">
+
+
+    <div class="col-lg-3 col-md-4 col-sm-6 pb-1"  *ngFor="let category of categories"
+            (click)="onCategorieClicked(category.categoryId)" >
+
+<!--    <app-single-categorie>{{categorie}}</app-single-categorie>-->
+<!--    </div>-->
+<!--    <app-single-categorie></app-single-categorie>-->
+<!--    <div class="col-lg-3 col-md-4 col-sm-6 pb-1">-->
+<!--      <a class="text-decoration-none" href="">-->
+<!--        <app-single-categorie>{{categorie}}</app-single-categorie>-->
+<!--      </a></div>-->
+    <app-single-categorie [category]="category"></app-single-categorie>
+
+  </div>
+<!--    <app-single-categorie></app-single-categorie>-->
+<!--    <app-single-categorie></app-single-categorie>-->
+<!--    <app-single-categorie></app-single-categorie>-->
+</div>
+
+
+</div>

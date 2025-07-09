@@ -1,0 +1,386 @@
+<!-- Custom Confirm Modal -->
+<div class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="confirmModalLabel"
+     aria-hidden="true"
+     [class.show]="showModal"
+     [ngStyle]="{ display: showModal ? 'block' : 'none', background: 'rgba(0,0,0,0.6)' }"
+     style="z-index: 1050;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content bg-warning">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Confirm Edit</h5>
+        <button type="button" class="close" aria-label="Close" (click)="onConfirmModalCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <strong style="color: black">{{ confirmMessage || 'Are you sure you want to confirm changes?' }}</strong>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" (click)="onConfirmModalAccept()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--&lt;!&ndash; Breadcrumb &ndash;&gt;-->
+<!--<div class="container-fluid">-->
+<!--  <div class="row px-xl-5">-->
+<!--    <div class="col-12">-->
+<!--      <nav class="breadcrumb bg-light mb-4">-->
+<!--        <a class="breadcrumb-item text-dark" href="#">Dashboard</a>-->
+<!--        <a class="breadcrumb-item text-dark" href="#">Products</a>-->
+<!--        <span class="breadcrumb-item active">Edit Product</span>-->
+<!--      </nav>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Edit Product Form &ndash;&gt;-->
+<!--<form [formGroup]="editProductFormGroup" (ngSubmit)="onSubmit()" class="container-fluid px-xl-5 mb-5">-->
+<!--  <div class="row">-->
+
+<!--    &lt;!&ndash; Left Sidebar: Basic Info &ndash;&gt;-->
+<!--    <div class="col-lg-4">-->
+<!--      <div class="bg-light p-4 rounded shadow-sm">-->
+<!--        <h5 class="mb-3">Product Information</h5>-->
+
+<!--        <div class="form-group">-->
+<!--          <label>Product Name</label>-->
+<!--          <input class="form-control" formControlName="productName" placeholder="Enter product name" />-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--          <label>Brand</label>-->
+<!--          <input class="form-control" formControlName="productBrand" placeholder="e.g. Nike, Apple..." />-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--          <label>Origin Location</label>-->
+<!--          <input class="form-control" formControlName="originLocation" placeholder="e.g. USA, China..." />-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--          <label>Category</label>-->
+<!--          <select class="form-control" formControlName="productCategory">-->
+<!--            <option value="">&#45;&#45; Select Category &#45;&#45;</option>-->
+<!--            <option *ngFor="let c of categories" [value]="c.categoryId">{{ c.categoryName }}</option>-->
+<!--          </select>-->
+<!--        </div>-->
+
+<!--        <div *ngIf="filteredSizes.length" class="form-group">-->
+<!--          <label>Available Sizes</label>-->
+<!--          <div class="d-flex flex-column">-->
+<!--            <div class="custom-control custom-checkbox mb-2" *ngFor="let size of filteredSizes">-->
+<!--              <input type="checkbox"-->
+<!--                     class="custom-control-input"-->
+<!--                     [id]="'size-' + size"-->
+<!--                     [checked]="isSizeSelected(size)"-->
+<!--                     (change)="toggleSizeSelection(size)" />-->
+<!--              <label class="custom-control-label" [for]="'size-' + size">{{ size }}</label>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Right Main Section &ndash;&gt;-->
+<!--    <div class="col-lg-8">-->
+<!--      <div formArrayName="sizeVariants">-->
+<!--        <div *ngFor="let sizeGroup of getSizeVariantsControls(); let i = index" [formGroupName]="i" class="mb-4 p-4 bg-white shadow-sm border rounded">-->
+<!--          <h5 class="mb-3">Size : {{ sizeGroup.get('size')?.value }}</h5>-->
+
+<!--          <div class="row">-->
+<!--            &lt;!&ndash; Left Side: Price, Description, Dimensions, Colors &ndash;&gt;-->
+<!--            <div class="col-md-4">-->
+<!--              <div formGroupName="productPrice" class="form-group">-->
+<!--                <label>Price</label>-->
+<!--                <input class="form-control" formControlName="price" type="number" placeholder="e.g. 49.99" />-->
+<!--              </div>-->
+
+<!--              <div class="form-group">-->
+<!--                <label>Currency</label>-->
+<!--                <select class="form-control" formControlName="currency">-->
+<!--                  <option *ngFor="let cur of currencies" [value]="cur.code">{{ cur.code }} - {{ cur.name }} ({{ cur.symbol }})</option>-->
+<!--                </select>-->
+<!--              </div>-->
+
+<!--              <div class="form-group">-->
+<!--                <label>Description</label>-->
+<!--                <textarea class="form-control" formControlName="description" rows="2"></textarea>-->
+<!--              </div>-->
+
+<!--              <div formGroupName="dimension" class="row">-->
+<!--                <div class="form-group col-6">-->
+<!--                  <label>Height</label>-->
+<!--                  <input class="form-control" formControlName="height" type="number" />-->
+<!--                </div>-->
+<!--                <div class="form-group col-6">-->
+<!--                  <label>Width</label>-->
+<!--                  <input class="form-control" formControlName="width" type="number" />-->
+<!--                </div>-->
+<!--                <div class="form-group col-6">-->
+<!--                  <label>Larger</label>-->
+<!--                  <input class="form-control" formControlName="larger" type="number" />-->
+<!--                </div>-->
+<!--                <div class="form-group col-6">-->
+<!--                  <label>Weight</label>-->
+<!--                  <input class="form-control" formControlName="weight" type="number" />-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div *ngIf="filteredColors.length" class="form-group">-->
+<!--                <label>Colors</label>-->
+<!--                <div class="d-flex flex-wrap">-->
+<!--                  <div class="custom-control custom-checkbox mr-3" *ngFor="let color of filteredColors">-->
+<!--                    <input type="checkbox"-->
+<!--                           class="custom-control-input"-->
+<!--                           [id]="'color-' + i + '-' + color"-->
+<!--                           [checked]="isColorSelected(i, color)"-->
+<!--                           (change)="toggleColorSelection(i, color)" />-->
+<!--                    <label class="custom-control-label" [for]="'color-' + i + '-' + color">{{ color }}</label>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Right Side: Color Variants &ndash;&gt;-->
+<!--            <div class="col-md-8">-->
+<!--              <div formArrayName="colorVariants">-->
+<!--                <div *ngFor="let colorGroup of getColorVariantsControls(i); let j = index" [formGroupName]="j" class="bg-light border rounded p-3 mb-4">-->
+<!--                  <h6 class="mb-3">Color : {{ colorGroup.get('color')?.value }}</h6>-->
+
+<!--                  <div class="row">-->
+<!--                    &lt;!&ndash; Quantity, Selected, Uploads &ndash;&gt;-->
+<!--                    <div class="col-md-6">-->
+<!--                      <div class="form-group">-->
+<!--                        <label>Quantity</label>-->
+<!--                        <input class="form-control" formControlName="quantity" type="number" />-->
+<!--                      </div>-->
+
+<!--                      <div class="custom-control custom-checkbox">-->
+<!--                        <input-->
+<!--                          type="checkbox"-->
+<!--                          class="custom-control-input"-->
+<!--                          [id]="'selected-' + i + '-' + j"-->
+<!--                          formControlName="selected" />-->
+<!--                        <label class="custom-control-label" [for]="'selected-' + i + '-' + j">Mark as Selected</label>-->
+<!--                      </div>-->
+<!--                      <br>-->
+<!--                      <div formArrayName="productImagesBas64">-->
+<!--                        <div *ngFor="let imgCtrl of getProductImagesControls(i, j); let imgIndex = index" class="form-group">-->
+<!--                          <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event, i, j, imgIndex)" />-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Preview &ndash;&gt;-->
+<!--                    <div class="col-md-6">-->
+<!--                      <div *ngIf="getProductImagesControls(i, j).length">-->
+<!--                        <img-->
+<!--                          *ngIf="getProductImagesControls(i, j)[0].value"-->
+<!--                          [src]="getProductImagesControls(i, j)[0].value"-->
+<!--                          class="img-fluid mb-2 border rounded"-->
+<!--                          style="max-height: 200px; width: 100%; object-fit: cover;"-->
+<!--                        />-->
+<!--                        <div class="d-flex justify-content-between">-->
+<!--                          <ng-container *ngFor="let ctrl of getProductImagesControls(i, j) | slice:1:4">-->
+<!--                            <img *ngIf="ctrl.value"-->
+<!--                                 [src]="ctrl.value"-->
+<!--                                 class="img-thumbnail"-->
+<!--                                 style="width: 30%; max-height: 80px; object-fit: cover;" />-->
+<!--                          </ng-container>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div> &lt;!&ndash; row &ndash;&gt;-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div> &lt;!&ndash; main row inside size variant &ndash;&gt;-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Submit Button &ndash;&gt;-->
+<!--      <div class="text-right">-->
+<!--        <button type="submit" class="btn btn-primary" [disabled]="editProductFormGroup.invalid">-->
+<!--          Update Product-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</form>-->
+
+
+<!-- 📌 Unified Container Start -->
+<div class="container-fluid px-xl-5 mb-5">
+
+  <!-- 🌐 Breadcrumb -->
+  <div class="row">
+    <div class="col-12">
+      <nav class="breadcrumb bg-light mb-4">
+        <a class="breadcrumb-item text-dark" href="#">Dashboard</a>
+        <a class="breadcrumb-item text-dark" href="#">Products</a>
+        <span class="breadcrumb-item active">Edit Product</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- 📝 Edit Product Form -->
+  <form [formGroup]="editProductFormGroup" (ngSubmit)="onSubmit()">
+    <div class="row">
+
+      <!-- 🧱 Left Sidebar -->
+      <div class="col-lg-4">
+        <div class="bg-light p-4 rounded shadow-sm">
+          <h5 class="mb-3">Product Information</h5>
+
+          <div class="form-group">
+            <label>Product Name</label>
+            <input class="form-control" formControlName="productName" placeholder="Enter product name" />
+          </div>
+
+          <div class="form-group">
+            <label>Brand</label>
+            <input class="form-control" formControlName="productBrand" placeholder="e.g. Nike, Apple..." />
+          </div>
+
+          <div class="form-group">
+            <label>Origin Location</label>
+            <input class="form-control" formControlName="originLocation" placeholder="e.g. USA, China..." />
+          </div>
+
+          <div class="form-group">
+            <label>Category</label>
+            <select class="form-control" formControlName="productCategory">
+              <option value="">-- Select Category --</option>
+              <option *ngFor="let c of categories" [value]="c.categoryId">{{ c.categoryName }}</option>
+            </select>
+          </div>
+
+          <div *ngIf="filteredSizes.length" class="form-group">
+            <label>Available Sizes</label>
+            <div class="d-flex flex-column">
+              <div class="custom-control custom-checkbox mb-2" *ngFor="let size of filteredSizes">
+                <input type="checkbox" class="custom-control-input" [id]="'size-' + size" [checked]="isSizeSelected(size)" (change)="toggleSizeSelection(size)" />
+                <label class="custom-control-label" [for]="'size-' + size">{{ size }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🧩 Right Main Section -->
+      <div class="col-lg-8">
+        <div formArrayName="sizeVariants">
+          <div *ngFor="let sizeGroup of getSizeVariantsControls(); let i = index" [formGroupName]="i" class="mb-4 p-4 bg-white shadow-sm border rounded">
+            <h5 class="mb-3">Size : {{ sizeGroup.get('size')?.value }}</h5>
+
+            <div class="row">
+              <!-- 📦 Left Column -->
+              <div class="col-md-4">
+                <div formGroupName="productPrice" class="form-group">
+                  <label>Price</label>
+                  <input class="form-control" formControlName="price" type="number" placeholder="e.g. 49.99" />
+                </div>
+
+                <div class="form-group">
+                  <label>Currency</label>
+                  <select class="form-control" formControlName="currency">
+                    <option *ngFor="let cur of currencies" [value]="cur.code">{{ cur.code }} - {{ cur.name }} ({{ cur.symbol }})</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea class="form-control" formControlName="description" rows="2"></textarea>
+                </div>
+
+                <div formGroupName="dimension" class="row">
+                  <div class="form-group col-6">
+                    <label>Height</label>
+                    <input class="form-control" formControlName="height" type="number" />
+                  </div>
+                  <div class="form-group col-6">
+                    <label>Width</label>
+                    <input class="form-control" formControlName="width" type="number" />
+                  </div>
+                  <div class="form-group col-6">
+                    <label>Larger</label>
+                    <input class="form-control" formControlName="larger" type="number" />
+                  </div>
+                  <div class="form-group col-6">
+                    <label>Weight</label>
+                    <input class="form-control" formControlName="weight" type="number" />
+                  </div>
+                </div>
+
+                <div *ngIf="filteredColors.length" class="form-group">
+                  <label>Colors</label>
+                  <div class="d-flex flex-wrap">
+                    <div class="custom-control custom-checkbox mr-3" *ngFor="let color of filteredColors">
+                      <input type="checkbox" class="custom-control-input" [id]="'color-' + i + '-' + color" [checked]="isColorSelected(i, color)" (change)="toggleColorSelection(i, color)" />
+                      <label class="custom-control-label" [for]="'color-' + i + '-' + color">{{ color }}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 🎨 Right Column -->
+              <div class="col-md-8">
+                <div formArrayName="colorVariants">
+                  <div *ngFor="let colorGroup of getColorVariantsControls(i); let j = index" [formGroupName]="j" class="bg-light border rounded p-3 mb-4">
+                    <h6 class="mb-3">Color : {{ colorGroup.get('color')?.value }}</h6>
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Quantity</label>
+                          <input class="form-control" formControlName="quantity" type="number" />
+                        </div>
+
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" [id]="'selected-' + i + '-' + j" formControlName="selected" />
+                          <label class="custom-control-label" [for]="'selected-' + i + '-' + j">Mark as Selected</label>
+                        </div>
+
+                        <br />
+                        <div formArrayName="productImagesBas64">
+                          <div *ngFor="let imgCtrl of getProductImagesControls(i, j); let imgIndex = index" class="form-group">
+                            <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event, i, j, imgIndex)" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div *ngIf="getProductImagesControls(i, j).length">
+                          <img *ngIf="getProductImagesControls(i, j)[0].value" [src]="getProductImagesControls(i, j)[0].value" class="img-fluid mb-2 border rounded" style="max-height: 200px; width: 100%; object-fit: cover;" />
+                          <div class="d-flex justify-content-between">
+                            <ng-container *ngFor="let ctrl of getProductImagesControls(i, j) | slice:1:4">
+                              <img *ngIf="ctrl.value" [src]="ctrl.value" class="img-thumbnail" style="width: 30%; max-height: 80px; object-fit: cover;" />
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div> <!-- row -->
+                  </div>
+                </div>
+              </div>
+            </div> <!-- row -->
+          </div>
+        </div>
+
+        <!-- ✅ Submit -->
+        <div class="text-right">
+          <button type="submit" class="btn btn-primary" [disabled]="editProductFormGroup.invalid">
+            Update Product
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- 📌 Unified Container End -->

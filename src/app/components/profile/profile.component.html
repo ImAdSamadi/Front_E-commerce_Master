@@ -1,0 +1,368 @@
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+  <div class="row px-xl-5">
+    <div class="col-12">
+      <nav class="breadcrumb bg-light mb-30">
+        <a class="breadcrumb-item text-dark" style="cursor: pointer" (click)="onHome()">Home</a>
+        <span class="breadcrumb-item active">Profile</span>
+      </nav>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumb End -->
+
+<div class="container mt-4">
+
+  <h2 class="mb-4">My Profile</h2>
+
+  <!-- Alerts -->
+  <div *ngIf="saveSuccess" class="alert alert-success" role="alert">
+    Profile updated successfully!
+  </div>
+  <div *ngIf="saveError" class="alert alert-danger" role="alert">
+    Error updating profile. Please try again.
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSave()">
+    <div class="row">
+      <!-- Profile Picture Section -->
+      <div class="col-md-4 text-center mb-4">
+        <div class="position-relative d-inline-block">
+          <img
+            [src]="previewUrl || defaultAvatar"
+            alt="Profile Picture"
+            class="rounded-circle img-thumbnail"
+            style="width: 180px; height: 180px; object-fit: cover;"
+          />
+          <label
+            for="profilePictureInput"
+            class="position-absolute"
+            style="bottom: 0; right: 0; cursor: pointer;"
+            title="Change Profile Picture"
+          >
+            <i
+              class="fa fa-pencil-alt bg-white rounded-circle p-2"
+              style="font-size: 1.2rem; color: #007bff;"
+            ></i>
+          </label>
+          <input
+            type="file"
+            id="profilePictureInput"
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            hidden
+            [disabled]="!isEditing"
+          />
+        </div>
+      </div>
+
+      <!-- Info Sections -->
+      <div class="col-md-8">
+        <!-- Personal Info -->
+        <div class="bg-white p-4 mb-4 shadow-sm rounded">
+          <h4>Personal Info</h4>
+
+          <div class="form-group row align-items-center">
+            <label class="col-sm-3 col-form-label">Email</label>
+            <div class="col-sm-7">
+              <input
+                type="email"
+                class="form-control-plaintext"
+                formControlName="email"
+                readonly
+              />
+            </div>
+          </div>
+
+          <div class="form-group row align-items-center">
+            <label class="col-sm-3 col-form-label">First Name</label>
+            <div class="col-sm-7">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="firstName"
+                [readonly]="!isEditing"
+                [ngClass]="{ 'is-invalid': isInvalid('firstName') }"
+              />
+              <div
+                *ngIf="isInvalid('firstName')"
+                class="invalid-feedback"
+              >
+                First name is required.
+              </div>
+            </div>
+            <div class="col-sm-2 text-right">
+              <button
+                type="button"
+                class="btn btn-link p-0"
+                (click)="editField('firstName')"
+                *ngIf="!isEditing"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group row align-items-center">
+            <label class="col-sm-3 col-form-label">Last Name</label>
+            <div class="col-sm-7">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="lastName"
+                [readonly]="!isEditing"
+                [ngClass]="{ 'is-invalid': isInvalid('lastName') }"
+              />
+              <div
+                *ngIf="isInvalid('lastName')"
+                class="invalid-feedback"
+              >
+                Last name is required.
+              </div>
+            </div>
+            <div class="col-sm-2 text-right">
+              <button
+                type="button"
+                class="btn btn-link p-0"
+                (click)="editField('lastName')"
+                *ngIf="!isEditing"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Phone Number Split -->
+          <div class="form-group row align-items-center">
+            <label class="col-sm-3 col-form-label">Phone Number</label>
+            <div class="col-sm-3">
+              <select
+                class="form-control"
+                formControlName="phoneCountryCode"
+                [disabled]="!isEditing"
+              >
+                <option *ngFor="let c of countryCodes" [value]="c.code">
+                  {{ c.display }}
+                </option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="phoneNumber"
+                [readonly]="!isEditing"
+                [ngClass]="{ 'is-invalid': isInvalid('phoneNumber') }"
+              />
+              <div
+                *ngIf="isInvalid('phoneNumber')"
+                class="invalid-feedback"
+              >
+                Phone number is required.
+              </div>
+            </div>
+            <div class="col-sm-2 text-right">
+              <button
+                type="button"
+                class="btn btn-link p-0"
+                (click)="editField('phone')"
+                *ngIf="!isEditing"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Info -->
+        <div class="bg-white p-4 mb-4 shadow-sm rounded">
+          <h4>Address Info</h4>
+
+          <div class="form-group row align-items-center">
+            <label class="col-sm-3 col-form-label">Shipping Address</label>
+            <div class="col-sm-7">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="shippingAddress"
+                [readonly]="!isEditing"
+              />
+            </div>
+            <div class="col-sm-2 text-right">
+              <button
+                type="button"
+                class="btn btn-link p-0"
+                (click)="editField('shippingAddress')"
+                *ngIf="!isEditing"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group row align-items-center">
+            <label class="col-sm-3 col-form-label">City</label>
+            <div class="col-sm-7">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="city"
+                [readonly]="!isEditing"
+              />
+            </div>
+            <div class="col-sm-2 text-right">
+              <button
+                type="button"
+                class="btn btn-link p-0"
+                (click)="editField('city')"
+                *ngIf="!isEditing"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group row align-items-center">
+            <label class="col-sm-3 col-form-label">State</label>
+            <div class="col-sm-7">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="state"
+                [readonly]="!isEditing"
+              />
+            </div>
+            <div class="col-sm-2 text-right">
+              <button
+                type="button"
+                class="btn btn-link p-0"
+                (click)="editField('state')"
+                *ngIf="!isEditing"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group row align-items-center">
+            <label class="col-sm-3 col-form-label">Zip Code</label>
+            <div class="col-sm-7">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="zipCode"
+                [readonly]="!isEditing"
+              />
+            </div>
+            <div class="col-sm-2 text-right">
+              <button
+                type="button"
+                class="btn btn-link p-0"
+                (click)="editField('zipCode')"
+                *ngIf="!isEditing"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div>
+          <h4>Security</h4>
+
+          <div class="bg-white p-4 mb-4 shadow-sm rounded">
+
+          <div class="form-group row align-items-center">
+            <label class="col-sm-3 col-form-label">Password</label>
+            <div class="col-sm-7">
+              <input
+                type="password"
+                class="form-control"
+                formControlName="password"
+                [readonly]="!isEditing"
+                placeholder="Enter new password"
+                [ngClass]="{ 'is-invalid': isInvalid('password') }"
+              />
+              <small class="form-text text-muted">
+                Leave blank to keep current password.
+              </small>
+              <div
+                *ngIf="isInvalid('password')"
+                class="invalid-feedback"
+              >
+                Password must be at least 6 characters.
+              </div>
+            </div>
+            <div class="col-sm-2 text-right">
+              <button
+                type="button"
+                class="btn btn-link p-0"
+                (click)="editField('password')"
+                *ngIf="!isEditing"
+                title="Edit"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group row align-items-center" *ngIf="profileForm.get('password')?.value">
+            <label class="col-sm-3 col-form-label">Confirm Password</label>
+            <div class="col-sm-7">
+              <input
+                type="password"
+                class="form-control"
+                formControlName="confirmPassword"
+                [readonly]="!isEditing"
+                placeholder="Confirm new password"
+                [ngClass]="{ 'is-invalid': isConfirmPasswordInvalid() }"
+              />
+              <div *ngIf="isConfirmPasswordInvalid()" class="invalid-feedback">
+                Passwords do not match.
+              </div>
+            </div>
+          </div>
+
+          </div>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-4">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!isEditing || profileForm.invalid || loading"
+          >
+            <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+            Save
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary ml-2"
+            (click)="onCancel()"
+            *ngIf="isEditing && !loading"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-link text-danger ml-3"
+            (click)="onLogout()"
+            *ngIf="!isEditing"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

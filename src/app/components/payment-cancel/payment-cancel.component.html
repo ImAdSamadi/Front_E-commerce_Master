@@ -1,0 +1,52 @@
+
+
+<div
+  class="cancel-page-container d-flex flex-column align-items-center justify-content-center min-vh-100 bg-gradient position-relative px-3 py-5"
+>
+  <!-- LOADING STATE -->
+  <ng-container *ngIf="loading">
+    <div class="text-center">
+      <div
+        class="spinner-border text-danger mb-4"
+        role="status"
+        style="width: 3rem; height: 3rem"
+      ></div>
+      <h5 class="text-muted">Cancelling your payment...</h5>
+    </div>
+  </ng-container>
+
+  <!-- ERROR STATE -->
+  <div
+    *ngIf="error"
+    class="card shadow-lg border-0 p-5 text-center bg-white rounded-4 animate__animated animate__fadeIn"
+    style="max-width: 500px; z-index: 2"
+  >
+    <div class="text-danger mb-3">
+      <i class="fas fa-times-circle fa-4x"></i>
+    </div>
+    <h3 class="mb-2 fw-bold">Capture Failed</h3>
+    <p class="text-muted mb-4">{{ error }}</p>
+    <button class="btn btn-outline-danger px-4" (click)="goToCheckout()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- CANCEL STATE -->
+  <div
+    *ngIf="message"
+    class="card shadow-lg border-0 p-5 text-center bg-white rounded-4 animate__animated animate__fadeInDown"
+    style="max-width: 500px; z-index: 2"
+  >
+    <div class="text-danger mb-4">
+      <i class="fas fa-times-circle fa-4x"></i>
+    </div>
+    <h2 class="fw-bold mb-3 text-danger">Payment Cancelled</h2>
+    <p class="text-muted">{{ message }}</p>
+    <a
+      class="btn btn-danger px-4 py-2 mt-4"
+      (click)="goToCheckout()"
+    >
+      Try Again
+    </a>
+  </div>
+</div>

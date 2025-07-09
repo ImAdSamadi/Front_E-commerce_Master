@@ -1,0 +1,15 @@
+
+
+
+<div class="gallery-container">
+  <div *ngFor="let img of imagesBase64; let i = index" class="image-wrapper">
+    <img [src]="img" alt="Uploaded image" class="preview-image" />
+    <button type="button" (click)="removeImage(i)">Remove</button>
+  </div>
+
+  <!-- Upload new images if less than 4 -->
+  <div *ngIf="imagesBase64.length < 4" class="upload-wrapper">
+    <input type="file" (change)="onFileSelected($event, imagesBase64.length)" accept="image/*" />
+  </div>
+</div>
+

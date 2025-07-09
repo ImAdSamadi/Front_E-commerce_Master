@@ -1,0 +1,33 @@
+
+
+#product-carousel {
+  height: 450px; /* exactly as template height */
+  max-width: 100%;
+}
+
+#product-carousel .carousel-inner {
+  height: 450px;
+}
+
+#product-carousel .carousel-item {
+  height: 450px;
+}
+
+/*.product-carousel-img {*/
+/*  display: block;       !* removes inline space below the image *!*/
+/*  margin: 15px auto;    !* adds equal space top & bottom, adjust 15px as needed *!*/
+/*  max-height: 430px;*/
+/*  width: auto;*/
+/*  object-fit: cover;*/
+/*}*/
+
+.product-carousel-img {
+  display: block;       /* removes inline space below the image */
+  margin: 2.5px auto 2.5px auto; /* equal top & bottom margin */
+  max-height: 445px;    /* slightly less to account for margins */
+  width: auto;
+  object-fit: cover;
+}
+
+
+

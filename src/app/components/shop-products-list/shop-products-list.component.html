@@ -1,0 +1,14 @@
+<ng-container *ngIf="areFiltersEmpty; else filteredList">
+  <ng-container *ngFor="let product of products">
+    <app-single-product [product]="product"></app-single-product>
+  </ng-container>
+</ng-container>
+
+
+<ng-template #filteredList>
+  <ng-container *ngFor="let filteredProduct of filteredProductsWithFilters">
+    <app-single-product [filteredProduct]="filteredProduct"></app-single-product>
+  </ng-container>
+</ng-template>
+
+

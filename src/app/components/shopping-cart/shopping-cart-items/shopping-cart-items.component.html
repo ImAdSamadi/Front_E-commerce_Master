@@ -1,0 +1,114 @@
+<ng-container *ngIf="shoppingCart">
+
+<!--  <h3>  SHOPPING CART [ <small>{{shoppingCart.items.length}} Item(s) </small>]<a href="products.html" class="btn btn-large pull-right"><i class="icon-arrow-left"></i> Continue Shopping </a></h3>-->
+<!--  <hr class="soft"/>-->
+<!--  <table class="table table-bordered">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--      <th>Product</th>-->
+<!--      <th>Description</th>-->
+<!--      <th>Quantity/Update</th>-->
+<!--      <th>Price</th>-->
+<!--      <th>Discount</th>-->
+<!--      <th>Tax</th>-->
+<!--      <th>Total</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--      <tr *ngFor="let item of shoppingCart.items">-->
+<!--        <td (click)="goToProduct(item.product, item.product.pickedSize, item.product.pickedColor)"> <img width="60" src="{{item.product.productImagesBas64[0]}}" alt=""/></td>-->
+<!--        <td>{{item.product.name}}<br/>Color : {{item.product.pickedColor}}-->
+<!--          <br/>Size : {{item.product.pickedSize}}</td>-->
+<!--        <td>-->
+
+<!--            <div class="input-append">-->
+<!--              <input class="span1" style="max-width:34px" placeholder="{{item.quantity}}" id="appendedInputButtons" size="16" type="text">-->
+<!--              <button class="btn" type="button">-->
+<!--                <i class="icon-minus"></i>-->
+<!--              </button>-->
+<!--              <button class="btn" type="button">-->
+<!--                <i class="icon-plus"></i>-->
+<!--              </button>-->
+<!--              <button (click)="onDeleteItem(item.product)" class="btn btn-danger" type="button">-->
+<!--                <i class="icon-remove icon-white"></i>-->
+<!--              </button>				</div>-->
+<!--        </td>-->
+<!--        <td>{{item.product.productPrice.symbol}}{{item.product.productPrice.price}}</td>-->
+<!--        <td>{{item.product.productPrice.symbol}}0</td>-->
+<!--        <td>{{item.product.productPrice.symbol}}0</td>-->
+<!--        <td>{{item.quantity*item.product.productPrice.price}}</td>-->
+<!--      </tr>-->
+
+
+<!--    <tr>-->
+<!--      <td colspan="6" style="text-align:right">Total Price:	</td>-->
+<!--      <td>{{shoppingCartService.calcTotalPrice(shoppingCart)}}</td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--      <td colspan="6" style="text-align:right">Total Discount:	</td>-->
+<!--      <td> 0</td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--      <td colspan="6" style="text-align:right">Total Tax:	</td>-->
+<!--      <td> 0</td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--      <td colspan="6" style="text-align:right"><strong>TOTAL ({{shoppingCartService.calcTotalPrice(shoppingCart)}} - 0 - 0) =</strong></td>-->
+<!--      <td class="label label-important" style="display:block"> <strong> {{shoppingCartService.calcTotalPrice(shoppingCart)}} </strong></td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--  </table>-->
+
+
+  <table class="table table-light table-borderless table-hover text-center mb-0">
+    <thead class="thead-dark">
+    <tr>
+      <th>Products</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>Remove</th>
+    </tr>
+    </thead>
+    <tbody class="align-middle">
+    <tr *ngFor="let item of shoppingCart.items">
+      <td class="align-middle" style="cursor: pointer"
+          (click)="goToProduct(item.product, item.product.pickedSize, item.product.pickedColor)">
+        <img [src]="item.product.productImagesBas64[0]" alt="" style="width: 50px;" />
+        {{item.product.name}} {{item.product.pickedSize}}
+      </td>
+      <td class="align-middle">{{item.product.productPrice.symbol}}{{item.product.productPrice.price}}</td>
+      <td class="align-middle">
+        <div class="input-group quantity mx-auto" style="width: 100px;">
+          <div class="input-group-prepend">
+            <button class="btn btn-sm btn-primary btn-minus">
+              <i class="fa fa-minus"></i> <!-- or 'fas fa-minus' depending on FA version -->
+            </button>
+          </div>
+          <input
+            type="text"
+            class="form-control form-control-sm bg-secondary border-0 text-center"
+            [value]="item.quantity"
+            readonly
+          />
+          <div class="input-group-append">
+            <button class="btn btn-sm btn-primary btn-plus">
+              <i class="fa fa-plus"></i> <!-- or 'fas fa-plus' -->
+            </button>
+          </div>
+        </div>
+      </td>
+      <td class="align-middle">
+        {{item.product.productPrice.symbol}}{{item.quantity*item.product.productPrice.price}}</td>
+      <td class="align-middle">
+        <button class="btn btn-sm btn-danger" (click)="onDeleteItem(item.product)">
+          <i class="fa fa-times"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+
+</ng-container>

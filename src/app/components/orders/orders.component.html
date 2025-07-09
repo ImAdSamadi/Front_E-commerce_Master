@@ -1,0 +1,349 @@
+
+
+<div
+  class="modal fade"
+  id="productImagesModal"
+  tabindex="-1"
+  aria-labelledby="productImagesModalLabel"
+  aria-hidden="true"
+  #productImagesModal
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productImagesModalLabel">{{ selectedProduct?.name }} - {{selectedProduct?.pickedSize}}</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div
+          id="product-carousel"
+          class="carousel slide bg-light"
+          data-ride="carousel"
+          style="max-height: 500px;"
+        >
+          <div class="carousel-inner">
+            <div
+              class="carousel-item"
+              *ngFor="let img of selectedProduct?.productImagesBase64; let i = index"
+              [class.active]="i === 0"
+              style="height: 500px;"
+            >
+              <img
+                [src]="img"
+                alt="{{ selectedProduct?.name }}"
+                class="w-100 h-100"
+                style="object-fit: contain;"
+              />
+            </div>
+          </div>
+          <a
+            class="carousel-control-prev"
+            href="#product-carousel"
+            role="button"
+            data-slide="prev"
+            style="width: 50px;"
+          >
+            <i class="fa fa-2x fa-angle-left text-dark"></i>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a
+            class="carousel-control-next"
+            href="#product-carousel"
+            role="button"
+            data-slide="next"
+            style="width: 50px;"
+          >
+            <i class="fa fa-2x fa-angle-right text-dark"></i>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- end of Modal -->
+
+
+
+<div class="container-fluid">
+  <div class="row px-xl-5">
+    <div class="col-12">
+      <nav class="breadcrumb bg-light mb-1">
+        <a class="breadcrumb-item text-dark" style="cursor: pointer" (click)="onHome()">Home</a>
+        <a class="breadcrumb-item text-dark" style="cursor: pointer" (click)="onShop()">Shop</a>
+        <span class="breadcrumb-item active">My Orders</span>
+      </nav>
+      <!-- Product count under breadcrumb, aligned right -->
+      <div class="d-flex justify-content-end mb-3">
+        <h6>{{ orders.length }} Orders</h6>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Breadcrumb End -->
+
+<!-- Dropdowns and Orders Container -->
+<div class="container-fluid">
+  <div class="row px-xl-5 mb-4">
+    <div class="col-12 d-flex justify-content-start align-items-center">
+      <!-- Showing Dropdown -->
+      <div class="btn-group mr-3">
+        <button
+          type="button"
+          class="btn btn-sm btn-light dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          id="showDropdownBtn"
+        >
+          Showing: {{ selectedStatusFilter || 'All' }}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="showDropdownBtn">
+          <a class="dropdown-item" (click)="onStatusFilterChange(null)" href="#">All</a>
+          <a class="dropdown-item" (click)="onStatusFilterChange('APPROVED')" href="#">APPROVED</a>
+          <a class="dropdown-item" (click)="onStatusFilterChange('PENDING')" href="#">PENDING</a>
+          <a class="dropdown-item" (click)="onStatusFilterChange('CANCELED')" href="#">CANCELED</a>
+        </div>
+      </div>
+
+      <!-- Sorting Dropdown -->
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-sm btn-light dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          id="sortDropdownBtn"
+        >
+          Sorting: {{ getSortLabel(selectedSortOption) }}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+          <a class="dropdown-item" (click)="onSortChange('latest')" href="#">Latest</a>
+          <a class="dropdown-item" (click)="onSortChange('highest')" href="#">Most Expensive</a>
+          <a class="dropdown-item" (click)="onSortChange('lowest')" href="#">Least Expensive</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orders List -->
+  <div class="row px-xl-5">
+    <div class="col-12 mb-4" *ngIf="loading">
+      <div class="text-center">Loading your orders...</div>
+    </div>
+
+    <div class="col-12" *ngIf="!loading && orders.length === 0">
+      <div class="alert alert-info text-center">You have no orders yet.</div>
+    </div>
+
+    <div class="col-12" *ngFor="let order of orders">
+      <div class="card border shadow-sm mb-4">
+        <!-- Clickable Order Summary Header -->
+        <div
+          class="card-header bg-light d-flex justify-content-between align-items-center"
+          style="cursor: pointer;"
+          (click)="order.expanded = !order.expanded"
+        >
+          <div class="d-flex flex-column">
+            <div class="d-flex align-items-center mb-1">
+              <strong class="fs-5">Order #{{ order.orderId }}</strong>
+            </div>
+            <div class="text-muted fst-italic" style="font-size: 1rem;">
+              <i class="fa fa-clock mr-1" style="font-weight: 300; color: #6c757d;"></i>
+              {{ order.updatedAt | date: 'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+
+          <div class="text-right d-flex flex-column align-items-center">
+          <span
+            class="badge d-flex align-items-center"
+            [ngClass]="{
+              'text-success': order.status === 'APPROVED',
+              'text-warning': order.status === 'PENDING',
+              'text-danger': order.status === 'CANCELED'
+            }"
+          >
+            <i *ngIf="order.status === 'APPROVED'" class="fa fa-check-circle mr-2"></i>
+            <i *ngIf="order.status === 'PENDING'" class="fa fa-hourglass-half mr-2"></i>
+            <i *ngIf="order.status === 'CANCELED'" class="fa fa-times-circle mr-2"></i>
+            {{ order.status }}
+          </span>
+
+            <strong class="mt-2 d-flex align-items-center">
+              <img
+                src="assets/template/img/PayPal-Logo.png"
+                alt="PayPal"
+                style="height: 20px; vertical-align: middle; margin: 0 5px;"
+              />
+              Total: {{ order.totalPrice | currency }}
+            </strong>
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div *ngIf="order.expanded" class="container pt-4 pb-3">
+          <div class="row px-xl-5 g-4">
+            <div *ngFor="let item of order.items" class="col-lg-3 col-md-4 col-sm-6 pb-1">
+              <div class="product-item bg-light position-relative rounded" style="border: 1px solid #ccc;">
+                <!-- Quantity Ticket badge -->
+                <div class="position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">
+                <span class="badge text-dark px-3 py-2 fs-6 shadow" style="background-color: #e0e0e0;">
+                  {{ item.quantity }}
+                </span>
+                </div>
+
+                <!-- Product Name -->
+                <div class="text-center py-4" style="cursor: pointer"
+                     (click)="goToProduct(item.productId, item.pickedSize, item.pickedColor)">
+                  <span><strong>{{ item.name }}</strong></span>
+                </div>
+
+                <!-- Product Image -->
+                <div class="product-img position-relative overflow-hidden px-3">
+                  <img
+                    class="img-fluid w-100"
+                    [src]="item.productImagesBase64[0]"
+                    alt="{{ item.name }}"
+                    style="cursor: pointer;"
+                    (click)="openModal(item)"
+                  />
+                </div>
+
+                <!-- Size, Color, Unit Price -->
+                <div class="py-3" style="font-size: 1rem;">
+                  <div class="d-flex flex-column align-items-center text-left" style="width: fit-content; margin: 0 auto;">
+                    <div><strong>Price:</strong> {{ item.priceAtPurchase.price | currency:item.priceAtPurchase.currency }}</div>
+                    <div><strong>Size:</strong> {{ item.pickedSize }}</div>
+                    <div><strong>Color:</strong> {{ item.pickedColor }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Footer -->
+        <div class="card-footer bg-white py-4 position-relative">
+          <div class="row">
+            <div class="col-12 text-center">
+              <!-- Toggle shipping info text (CENTERED) -->
+              <strong
+                style="cursor: pointer; color: inherit;"
+                (click)="order.footerExpanded = !order.footerExpanded"
+                *ngIf="!order.footerExpanded"
+              >
+                Click to view Shipping & Delivery info
+              </strong>
+              <strong
+                style="cursor: pointer; color: inherit;"
+                (click)="order.footerExpanded = false"
+                *ngIf="order.footerExpanded"
+              >
+                Hide shipping info
+              </strong>
+            </div>
+          </div>
+
+          <!-- Shipment status badge (TOP-RIGHT corner) -->
+          <span
+            *ngIf="order.status === 'APPROVED'"
+            class="badge position-absolute mt-2 mr-3"
+            style="top: 0; right: 23px;"
+            [ngClass]="{
+      'text-success': order.shipment?.status === 'DELIVERED',
+      'text-info': order.shipment?.status === 'SHIPPED',
+      'text-warning': order.shipment?.status === 'PENDING'
+    }"
+          >
+    <i *ngIf="order.shipment?.status === 'DELIVERED'" class="fa fa-check-circle mr-2"></i>
+    <i *ngIf="order.shipment?.status === 'SHIPPED'" class="fa fa-truck mr-2"></i>
+    <i *ngIf="order.shipment?.status === 'PENDING'" class="fa fa-hourglass-half mr-2"></i>
+            {{ order.shipment?.status }}
+  </span>
+
+          <!-- Expandable Content -->
+          <div class="row mt-4" *ngIf="order.footerExpanded">
+            <!-- Left Info Column -->
+            <div class="col-md-6">
+              <div class="bg-light p-4 mb-3 rounded-2">
+                <div class="d-flex align-items-start mb-3">
+                  <span class="mr-2 text-muted font-weight-semibold" style="min-width: 80px;"><strong>Name :</strong></span>
+                  <span>{{ getNameFromAddress(order.shippingAddress) }}</span>
+                </div>
+                <div class="d-flex align-items-start mb-3">
+                  <span class="mr-2 text-muted font-weight-semibold" style="min-width: 80px;"><strong>Address :</strong></span>
+                  <span>{{ getCleanAddress(order.shippingAddress) }}</span>
+                </div>
+                <div class="d-flex align-items-start mb-3">
+                  <span class="mr-2 text-muted font-weight-semibold" style="min-width: 80px;"><strong>Phone :</strong></span>
+                  <span>{{ getPhoneFromAddress(order.shippingAddress) }}</span>
+                </div>
+
+                <!-- Shipment Info: Only if APPROVED -->
+                <div *ngIf="order.status === 'APPROVED'">
+                  <div class="d-flex align-items-start mb-3">
+                    <span class="mr-2 text-muted font-weight-semibold" style="min-width: 80px;"><strong>Shipped :</strong></span>
+                    <span>{{ order.shipment?.shippedDate | date: 'dd MMM yyyy' }}</span>
+                  </div>
+
+                  <div class="d-flex align-items-start mb-3">
+            <span class="mr-2 text-muted font-weight-semibold" style="min-width: 80px;">
+              <strong>{{ order.shipment?.status === 'DELIVERED' ? 'Delivered :' : 'Delivery :' }}</strong>
+            </span>
+                    <span>{{ order.shipment?.estimatedDeliveryDate | date: 'dd MMM yyyy' }}</span>
+                  </div>
+
+                  <div class="d-flex align-items-start">
+                    <span class="mr-2 text-muted font-weight-semibold" style="min-width: 80px;"><strong>Tracking :</strong></span>
+                    <span>{{ order.shipment?.trackingNumber }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Map Column -->
+            <div class="col-md-6">
+              <div class="bg-light p-4 mb-3 rounded">
+                <iframe
+                  [src]="getMapUrlForOrder(order)"
+                  width="100%"
+                  height="250"
+                  style="border:0;"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- Load More Button -->
+<div class="col-12 text-center" *ngIf="hasMore && !loading">
+  <button
+    class="btn btn-primary px-4 py-2"
+    (click)="fetchOrders()"
+    [disabled]="isLoadingMore"
+  >
+    <span *ngIf="isLoadingMore">
+      <i class="fa fa-spinner fa-spin mr-2"></i>Loading...
+    </span>
+    <span *ngIf="!isLoadingMore">Load More</span>
+  </button>
+</div>

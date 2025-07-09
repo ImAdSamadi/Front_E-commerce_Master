@@ -1,0 +1,18 @@
+<app-features></app-features>
+<app-categories></app-categories>
+
+<ng-container *ngIf="productState$ | async as state" [ngSwitch]="state.dataState">
+  <ng-container *ngSwitchCase="ProductStateEnum.LOADING">
+    <h1>data is LOADING .....................................</h1>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="ProductStateEnum.LOADED">
+    <app-products-list [products]="state.products"></app-products-list>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="ProductStateEnum.ERROR">
+    <h1>data is loaded with error : / {{state.errorMessage}}  /</h1>
+  </ng-container>
+</ng-container>
+
+<app-home-footer></app-home-footer>

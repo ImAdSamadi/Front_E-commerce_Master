@@ -1,0 +1,131 @@
+<!-- Modal -->
+<div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true" [ngClass]="{'show': showModal}" [ngStyle]="{'display': showModal ? 'block' : 'none'}" >
+  <div class="modal-dialog" role="document">
+    <div [ngClass]="{
+          'modal-content bg-success': alertType === 0,
+          'modal-content bg-warning': alertType === 1,
+          'modal-content bg-danger': alertType === 2
+        }">
+      <div class="modal-header text-center">
+        <h5 class="modal-title" id="alertModalLabel">
+          <strong>
+            {{ alertType === 0 ? 'SUCCESS' : alertType === 1 ? 'WARNING' : 'ERROR' }}
+          </strong>
+        </h5>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="modal-title" id="alertModalLabel1">
+        <strong>{{ alertMessage }}</strong>
+        </h6>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid" align="center">
+  <div class="row px-xl-5">
+    <form [formGroup]="userSignupForm" (ngSubmit)="onSubmit()">
+    <div class="col-lg-8" align="left">
+      <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Become a member</span></h5>
+      <div class="bg-light p-30 mb-5">
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label for="firstName">First Name*</label>
+            <input class="form-control" type="text" placeholder="John" id="firstName" formControlName="firstName">
+            <span class="text-danger" *ngIf='firstName?.touched && firstName?.errors?.["required"]'>
+              First Name is Required
+            </span>
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="lastName">Last Name*</label>
+            <input class="form-control" type="text" placeholder="Doe" id="lastName" formControlName="lastName">
+            <span class="text-danger" *ngIf='lastName?.touched && lastName?.errors?.["required"]'>
+              Last Name is Required
+            </span>
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="email">E-mail*</label>
+            <input class="form-control" type="text" placeholder="example@email.com" id="email" formControlName="email">
+            <span class="text-danger" *ngIf='email?.touched && email?.errors?.["required"]'>
+              E-mail is Required
+            </span>
+            <span class="text-danger" *ngIf='email?.touched && email?.errors?.["email"]'>
+              Enter a Valid E-mail
+            </span>
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="phoneNumber">Mobile No</label>
+            <input class="form-control" type="text" placeholder="+123 456 789" id="phoneNumber" formControlName="phoneNumber">
+          </div>
+<!--          <div class="col-md-6 form-group">-->
+<!--            <label >Mobile No</label>-->
+<!--            <input class="form-control" type="text" placeholder="+123 456 789">-->
+<!--          </div>-->
+          <div class="col-md-6 form-group">
+            <label for="shippingAddress">Address</label>
+            <input class="form-control" type="text" placeholder="123 Street" id="shippingAddress" formControlName="shippingAddress">
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="city">City</label>
+            <input class="form-control" type="text" placeholder="New York" id="city" formControlName="city">
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="state">State</label>
+            <input class="form-control" type="text" placeholder="United States" id="state" formControlName="state">
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="zipCode">ZIP Code</label>
+            <input class="form-control" type="text" placeholder="92000" id="zipCode" formControlName="zipCode">
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="password">Password*</label>
+            <input class="form-control" type="password" placeholder="********" id="password" formControlName="password">
+            <span class="text-danger" *ngIf='password?.touched && password?.errors?.["required"]'>
+              Password is Required
+            </span>
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="confirmPassword">Confirm Password*</label>
+            <input class="form-control" type="password" placeholder="********" id="confirmPassword" formControlName="confirmPassword">
+            <span class="text-danger" *ngIf='confirmPassword?.touched && confirmPassword?.errors?.["required"]'>
+              Password Confirm is Required
+            </span>
+            <span class="text-danger" *ngIf='confirmPassword?.touched && userSignupForm?.errors?.["passwordMismatch"]'>
+              Password's don't Match
+            </span>
+          </div>
+<!--          <div class="col-md-6 form-group">-->
+<!--            <label>Address Line 2</label>-->
+<!--            <input class="form-control" type="text" placeholder="123 Street">-->
+<!--          </div>-->
+
+        </div>
+        <button type="submit" class="btn btn-block btn-primary font-weight-bold py-3" [disabled]="!userSignupForm.valid">Join</button>
+<!--        <div-->
+<!--          class="alert"-->
+<!--          [ngClass]="-->
+<!--        alertType === 0-->
+<!--          ? 'alert-success'-->
+<!--          : alertType === 1-->
+<!--          ? 'alert-warning'-->
+<!--          : 'alert-danger'-->
+<!--      "-->
+<!--          *ngIf="alertMessage !== ''"-->
+<!--        >-->
+<!--          {{ alertMessage }}-->
+<!--        </div>-->
+
+      </div>
+    </div>
+    </form>
+
+  </div>
+</div>
+<!-- Checkout End -->
