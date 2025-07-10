@@ -41,32 +41,6 @@ export class SingleProductComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // if (this.filteredProduct) {
-    //   const p = this.filteredProduct.product;
-    //
-    //   this.displayName = this.filteredProduct.product.name
-    //
-    //   // Use matched size
-    //   this.displaySize = this.filteredProduct.matchedSize ?? p.sizeVariants[0]?.size ?? 'N/A';
-    //
-    //   // Use matched price
-    //   this.displayPrice = this.filteredProduct.matchedPrice ?? p.sizeVariants[0]?.productPrice.price ?? 0;
-    //
-    //   // Use matched color
-    //   if (this.filteredProduct.matchedColor) {
-    //     this.displayColor = this.filteredProduct.matchedColor;
-    //
-    //     const sizeVariant = p.sizeVariants.find(sv => sv.size === this.displaySize) || p.sizeVariants[0];
-    //     const colorVariant = sizeVariant.colorVariants.find(cv => cv.color === this.displayColor);
-    //
-    //     this.displayImages = colorVariant?.productImagesBas64 ?? [];
-    //   } else {
-    //     const firstColorVariant = p.sizeVariants[0]?.colorVariants[0];
-    //     this.displayColor = firstColorVariant?.color ?? 'N/A';
-    //     this.displayImages = firstColorVariant?.productImagesBas64 ?? [];
-    //   }
-    //
-    // }
 
     if (this.filteredProduct) {
       const p = this.filteredProduct.product;
@@ -175,16 +149,19 @@ export class SingleProductComponent implements OnInit {
 
   onProductItem() {
 
-    const actualProduct: Product = this.filteredProduct ? this.filteredProduct.product : this.product;
-    this.productService.getProductById(actualProduct.productId).subscribe(fetchedProduct => {
-      this.store.dispatch(new GetProductItemAction(fetchedProduct));
+    if (this.product){
+      this.store.dispatch(new GetProductItemAction(this.product));
       this.router.navigate(['/product-details'], {
         queryParams: { size: this.displaySize, color: this.displayColor }
       });
-    });
+    }
+    else {
+      this.store.dispatch(new GetProductItemAction(this.filteredProduct?.product!));
+      this.router.navigate(['/product-details'], {
+        queryParams: { size: this.displaySize, color: this.displayColor }
+      });
+    }
 
-    // this.store.dispatch(new GetProductItemAction(this.product)) ;
-    // this.router.navigateByUrl("/product-details") ;
   }
 
   addProductToCart() {

@@ -56,7 +56,7 @@
         (change)="onAllSizeToggle()"
       />
       <label class="custom-control-label" for="size-all">All Size</label>
-      <span class="badge border font-weight-normal">{{ totalSizeCount }}</span>
+      <span class="badge border font-weight-normal">{{ sizesWithCount.length }}</span>
     </div>
 
     <!-- Dynamic sizes -->
@@ -97,7 +97,7 @@
         (change)="onAllColorToggle()"
       />
       <label class="custom-control-label" for="color-all">All Color</label>
-      <span class="badge border font-weight-normal">{{ totalColorCount }}</span>
+      <span class="badge border font-weight-normal">{{ colorsWithCount.length }}</span>
     </div>
 
     <!-- Dynamic colors -->

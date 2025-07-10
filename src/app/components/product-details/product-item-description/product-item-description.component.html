@@ -54,13 +54,21 @@
         <div class="d-flex mb-4 flex-wrap" *ngIf="selectedSizeVariant">
           <strong class="text-dark mr-3">Colors:</strong>
 
+<!--          <div-->
+<!--            *ngFor="let colorVariant of selectedSizeVariant.colorVariants"-->
+<!--            class="color-thumb-wrapper mr-3 mb-2"-->
+<!--            [class.selected]="addProductForm.get('color')?.value === colorVariant.color"-->
+<!--            (click)="onColorChange(colorVariant.color)"-->
+<!--          >-->
           <div
             *ngFor="let colorVariant of selectedSizeVariant.colorVariants"
-            class="color-thumb-wrapper mr-3 mb-2"
-            [class.selected]="addProductForm.get('color')?.value === colorVariant.color"
+            class="color-thumb-wrapper mr-3 mb-2 p-2 rounded"
+            [class.border]="addProductForm.get('color')?.value === colorVariant.color"
+            [class.border-3]="addProductForm.get('color')?.value === colorVariant.color"
+            [class.border-primary]="addProductForm.get('color')?.value === colorVariant.color"
             (click)="onColorChange(colorVariant.color)"
           >
-            <input
+          <input
               type="radio"
               class="d-none"
               [id]="'color-' + colorVariant.color"
