@@ -11,6 +11,7 @@ export const environment = {
   /** the docker host ip address instead or localhost **/
   productService:"http://localhost:8087" ,
   customerService:"http://localhost:8086" ,
+  reviewService:"http://localhost:8083" ,
   orderService:"http://localhost:8089",
   paymentService:"http://localhost:8082",
   shipmentService:"http://localhost:8085",

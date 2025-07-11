@@ -317,6 +317,8 @@
                   </div>
                 </div>
 
+                <ng-container *ngIf="!securityService.profile">
+
                 <!-- Name -->
                 <div class="form-group">
                   <label for="name">Your Name *</label>
@@ -352,6 +354,8 @@
                   </div>
                 </div>
 
+                </ng-container>
+
                 <!-- 📸 Image Upload -->
                 <div class="form-group">
                   <div class="d-flex align-items-center mb-2">
@@ -380,10 +384,10 @@
                   <div class="d-flex flex-wrap mt-2">
                     <div
                       *ngFor="let img of previewImages; let i = index"
-                      class="position-relative mr-2 mb-2 border rounded"
+                      class="position-relative mr-2 mb-2 rounded"
                       style="width: 80px; height: 80px; overflow: hidden;"
                     >
-                      <img
+                    <img
                         [src]="img"
                         class="img-fluid h-100 w-100"
                         style="object-fit: cover;"
@@ -400,6 +404,7 @@
 
                     </div>
                   </div>
+
                 </div>
 
               <div class="form-group mb-0">

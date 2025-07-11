@@ -178,6 +178,12 @@ export class ProductItemAddetionalInfoComponent implements OnChanges {
       review.reviewImagesBase64 = this.previewImages;
     }
 
+    if (this.securityService.profile){
+      review.customerName = this.securityService.profile.firstName + ""
+        + this.securityService.profile.lastName
+      review.customerEmail = this.securityService.profile.email!
+    }
+
     this.reviewService.addReview(review).subscribe({
       next: () => {
         // this.showAlert(0, 'Review Added Successfully !');
@@ -189,6 +195,9 @@ export class ProductItemAddetionalInfoComponent implements OnChanges {
         this.selectedImages = [];
 
         form.resetForm({ rating: 0 });
+
+
+
       },
       error: err => {
         console.error('Error Submitting Review:', err);

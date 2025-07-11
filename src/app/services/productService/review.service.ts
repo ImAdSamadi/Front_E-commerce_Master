@@ -10,7 +10,7 @@ import {environment} from "../../../environments/environment";
 })
 export class ReviewService {
 
-  private baseUrl:string = environment.productService
+  private baseUrl:string = environment.reviewService
 
   constructor(private http: HttpClient) { }
 

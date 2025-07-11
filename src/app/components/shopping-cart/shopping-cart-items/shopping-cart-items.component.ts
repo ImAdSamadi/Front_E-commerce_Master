@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Store} from "@ngrx/store";
-import {CartProduct, ShoppingCart} from "../../../models/ShoppingCart";
+import {CartProduct, ShoppingCart, ShoppingCartItem} from "../../../models/ShoppingCart";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ShoppingCartService} from "../../../services/shoppingCartService/shopping-cart.service";
-import {DeleteProductFromCartAction} from "../../../ngrx/ShoppingCartState/cart.actions";
+import {AddProductToCartAction, DeleteProductFromCartAction} from "../../../ngrx/ShoppingCartState/cart.actions";
 import {Product} from "../../../models/product.model";
 import {GetProductItemAction} from "../../../ngrx/Product-item-State/productItem.actions";
 import {Router} from "@angular/router";
@@ -46,6 +46,38 @@ export class ShoppingCartItemsComponent implements OnInit{
         queryParams: { size, color }
       });
     });
+  }
+
+  increaseQuantity(item: ShoppingCartItem) {
+    const quantity = 1
+    if (this.secService.profile?.id) {
+      this.store.dispatch(new AddProductToCartAction({
+        productId: item.product.productId,
+        quantity,
+        customerId: this.secService.profile.id,
+        pickedSize: item.product.pickedSize,
+        pickedColor: item.product.pickedColor
+
+      }));
+    }
+  }
+
+  decreaseQuantity(item: ShoppingCartItem) {
+    if (item.quantity > 1) {
+      const quantity = -1
+      if (this.secService.profile?.id) {
+        this.store.dispatch(new AddProductToCartAction({
+          productId: item.product.productId,
+          quantity,
+          customerId: this.secService.profile.id,
+          pickedSize: item.product.pickedSize,
+          pickedColor: item.product.pickedColor
+
+        }));
+      }
+    } else {
+      this.onDeleteItem(item.product)
+    }
   }
 
 
