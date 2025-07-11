@@ -55,6 +55,7 @@ export class ShoppingCartItemsComponent implements OnInit{
         productId: item.product.productId,
         quantity,
         customerId: this.secService.profile.id,
+        selected: true,
         pickedSize: item.product.pickedSize,
         pickedColor: item.product.pickedColor
 
@@ -70,6 +71,7 @@ export class ShoppingCartItemsComponent implements OnInit{
           productId: item.product.productId,
           quantity,
           customerId: this.secService.profile.id,
+          selected: true,
           pickedSize: item.product.pickedSize,
           pickedColor: item.product.pickedColor
 
@@ -77,6 +79,21 @@ export class ShoppingCartItemsComponent implements OnInit{
       }
     } else {
       this.onDeleteItem(item.product)
+    }
+  }
+
+  onToggleSelection(item: ShoppingCartItem): void {
+    const quantity = 0
+    if (this.secService.profile?.id) {
+      this.store.dispatch(new AddProductToCartAction({
+        productId: item.product.productId,
+        quantity,
+        customerId: this.secService.profile.id,
+        selected: !item.selected,
+        pickedSize: item.product.pickedSize,
+        pickedColor: item.product.pickedColor
+
+      }));
     }
   }
 

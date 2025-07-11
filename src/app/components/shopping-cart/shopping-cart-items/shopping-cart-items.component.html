@@ -8,6 +8,7 @@
       <th>Quantity</th>
       <th>Total</th>
       <th>Remove</th>
+      <th></th>
     </tr>
     </thead>
     <tbody class="align-middle">
@@ -48,13 +49,35 @@
 <!--          </div>-->
         </div>
       </td>
+
       <td class="align-middle">
-        {{item.product.productPrice.symbol}}{{item.quantity*item.product.productPrice.price}}</td>
+        {{item.product.productPrice.symbol}}{{item.quantity*item.product.productPrice.price}}
+      </td>
+
       <td class="align-middle">
         <button class="btn btn-sm btn-danger" (click)="onDeleteItem(item.product)">
           <i class="fa fa-times"></i>
         </button>
       </td>
+
+
+      <td class="align-middle text-center">
+        <button
+          type="button"
+          class="btn btn-sm d-flex justify-content-center align-items-center"
+          [ngClass]="{
+            'btn-primary': item.selected,
+            'bg-white': !item.selected
+          }"
+          [style.color]="item.selected ? 'black' : 'black'"
+          style="border: 1px solid #ccc; padding: 0.25rem 0.4rem;"
+          (click)="onToggleSelection(item)"
+        >
+          <i class="fa fa-check"></i>
+        </button>
+      </td>
+
+
     </tr>
     </tbody>
   </table>

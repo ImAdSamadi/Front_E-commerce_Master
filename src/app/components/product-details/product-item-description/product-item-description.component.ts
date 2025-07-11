@@ -131,6 +131,7 @@ export class ProductItemDescriptionComponent implements OnInit {
       this.store.dispatch(new AddProductToCartAction({
         productId: this.product.productId,
         quantity,
+        selected: true,
         customerId: this.secService.profile.id,
         pickedSize: size,
         pickedColor: color

@@ -8,7 +8,8 @@ export interface ShoppingCart {
 
 export interface ShoppingCartItem{
   product : CartProduct ,
-  quantity : number
+  quantity : number,
+  selected: boolean
 }
 
 export interface AddItemRequest{
@@ -18,6 +19,7 @@ export interface AddItemRequest{
   quantity? : number
   pickedSize?: string
   pickedColor?: string
+  selected?: boolean
 
 }
 
