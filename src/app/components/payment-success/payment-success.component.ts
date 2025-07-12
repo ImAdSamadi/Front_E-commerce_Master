@@ -22,7 +22,8 @@ export class PaymentSuccessComponent implements OnInit {
   error: string | null = null;
   message: string | null = null;
 
-  paypalOrderId: string | null = null;
+  paymentId: string | null = null;
+  payerId: string | null = null;
   orderId: string | null = null;
 
   constructor(
@@ -34,11 +35,12 @@ export class PaymentSuccessComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.paypalOrderId = this.route.snapshot.queryParamMap.get('token');
+    this.paymentId = this.route.snapshot.queryParamMap.get('paymentId');
+    this.payerId = this.route.snapshot.queryParamMap.get('PayerID');
     this.orderId = this.route.snapshot.queryParamMap.get('orderId');
 
 
-    if (!this.paypalOrderId || !this.orderId) {
+    if (!this.paymentId || !this.payerId || !this.orderId) {
       this.error = 'Missing payment details.';
       this.loading = false;
       return;
@@ -53,13 +55,18 @@ export class PaymentSuccessComponent implements OnInit {
     }
 
     const captureRequest = {
-      paypalOrderId: this.paypalOrderId,
+      paymentId: this.paymentId,
+      payerId: this.payerId,
       orderId: this.orderId,
-      customerEmailAddress: customerInfo.customerEmailAddress,
+      customerId: customerInfo.customerId,
+      customerEmailAddress: customerInfo.customerEmail,
       shippingAddress: customerInfo.shippingAddress,
       originatingAddress: "Abdelmalek Essaâdi University – Multidisciplinary Faculty – P.O. Box 745, Main Post Office 92004 – Larache – Morocco",
-      firstname: customerInfo.firstname,
-      lastname: customerInfo.lastname
+      firstName: customerInfo.firstName,
+      lastName: customerInfo.lastName,
+      receiverFullName: customerInfo.receiverFullName,
+      receiverEmail: customerInfo.receiverEmail
+
     };
 
 

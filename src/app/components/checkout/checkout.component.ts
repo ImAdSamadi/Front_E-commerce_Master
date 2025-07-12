@@ -119,20 +119,22 @@ export class CheckoutComponent implements OnInit {
   onPlaceOrder() {
 
     const customerInfo = {
-      firstname: this.billingInfo.firstName,
-      lastname: this.billingInfo.lastName,
-      customerEmailAddress: '',
+      firstName: this.securityService.profile.firstName!,
+      lastName: this.securityService.profile.lastName!,
+      customerEmail: this.securityService.profile.email!,
       shippingAddress: '',
-      customerId: this.securityService.profile.id!
+      customerId: this.securityService.profile.id!,
+      receiverFullName: '',
+      receiverEmail: ''
     };
 
     if (this.useDifferentShipping) {
       // Shipping address from shipping form
-      customerInfo.customerEmailAddress = this.shippingInfo.email
       customerInfo.shippingAddress = `${this.shippingInfo.firstName} ${this.shippingInfo.lastName} - ${this.shippingInfo.address}, ${this.shippingInfo.city}, ${this.shippingInfo.state} ${this.shippingInfo.zipCode}, Morocco - Phone: ${this.shippingInfo.phoneNumber} - E-mail: ${this.shippingInfo.email}`;
+      customerInfo.receiverFullName = `${this.shippingInfo.firstName} ${this.shippingInfo.lastName}`
+      customerInfo.receiverEmail  = `${this.shippingInfo.email}`
     } else {
       // Shipping address same as billing
-      customerInfo.customerEmailAddress = this.billingInfo.email
       customerInfo.shippingAddress = `${this.billingInfo.firstName} ${this.billingInfo.lastName} - ${this.billingInfo.address}, ${this.billingInfo.city}, ${this.billingInfo.state} ${this.billingInfo.zipCode}, Morocco - Phone: ${this.billingInfo.phoneNumber} - E-mail: ${this.billingInfo.email}`;
     }
 
@@ -144,7 +146,14 @@ export class CheckoutComponent implements OnInit {
 
     if (this.customerId) {
 
-      this.orderService.placeOrder(this.customerId, customerInfo.shippingAddress).subscribe({
+      const createOrderRequest = {
+        customerId: this.securityService.profile.id!,
+        shippingAddress: customerInfo.shippingAddress,
+        receiverFullName: customerInfo.receiverFullName,
+        receiverEmail: customerInfo.receiverEmail
+      };
+
+      this.orderService.placeOrder(createOrderRequest).subscribe({
         next: (orderId) => this.waitForApprovalUrl(orderId),
         error: (err) => {
           this.loading = false;
@@ -161,11 +170,11 @@ export class CheckoutComponent implements OnInit {
   private waitForApprovalUrl(orderId: string) {
     const eventSource = this.orderService.listenForApprovalUrl(orderId);
 
-    eventSource.addEventListener('approvalUrl', (event: any) => {
-      const approvalUrl = event.data;
+    eventSource.addEventListener('payment-url', (event: any) => {
+      const approvalData = JSON.parse(event.data);
       eventSource.close();
       this.loading = false;
-      window.location.href = approvalUrl;
+      window.location.href = approvalData.paymentUrl;
     });
 
     eventSource.onerror = (err) => {
@@ -175,6 +184,7 @@ export class CheckoutComponent implements OnInit {
       eventSource.close();
     };
   }
+
 
 
   onShop() {

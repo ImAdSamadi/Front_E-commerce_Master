@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 
 export interface CustomerInfo {
 
-  customerEmailAddress: string
+  customerEmail: string
   customerId: string
   shippingAddress: string
-  firstname: string
-  lastname: string
+  firstName: string
+  lastName: string
+  receiverFullName: string
+  receiverEmail: string
 
 }
 

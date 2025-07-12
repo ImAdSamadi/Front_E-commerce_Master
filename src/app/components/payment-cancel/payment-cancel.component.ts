@@ -19,7 +19,6 @@ export class PaymentCancelComponent implements OnInit {
   error: string | null = null;
   message: string | null = null;
 
-  paypalOrderId: string | null = null;
   orderId: string | null = null;
 
   constructor(
@@ -33,10 +32,10 @@ export class PaymentCancelComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.paypalOrderId = this.route.snapshot.queryParamMap.get('token');
+
     this.orderId = this.route.snapshot.queryParamMap.get('orderId');
 
-    if (!this.paypalOrderId || !this.orderId) {
+    if (!this.orderId) {
       this.error = 'Missing payment details.';
       this.loading = false;
       return;
@@ -51,14 +50,17 @@ export class PaymentCancelComponent implements OnInit {
     }
 
     const captureRequest = {
-      paypalOrderId: this.paypalOrderId,
+
       orderId: this.orderId,
-      customerEmailAddress: customerInfo.customerEmailAddress,
+      customerId: customerInfo.customerId,
+      customerEmailAddress: customerInfo.customerEmail,
       shippingAddress: customerInfo.shippingAddress,
-      originatingAddress:
-        'Abdelmalek Essaâdi University – Multidisciplinary Faculty – P.O. Box 745, Main Post Office 92004 – Larache – Morocco',
-      firstname: customerInfo.firstname,
-      lastname: customerInfo.lastname
+      originatingAddress: "Abdelmalek Essaâdi University – Multidisciplinary Faculty – P.O. Box 745, Main Post Office 92004 – Larache – Morocco",
+      firstName: customerInfo.firstName,
+      lastName: customerInfo.lastName,
+      receiverFullName: customerInfo.receiverFullName,
+      receiverEmail: customerInfo.receiverEmail
+
     };
 
     this.orderService.captureOrder(captureRequest).subscribe({
@@ -77,6 +79,7 @@ export class PaymentCancelComponent implements OnInit {
         this.launchCancelAnimation();
       }
     });
+
   }
 
   goBack(): void {

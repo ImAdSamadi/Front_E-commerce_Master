@@ -41,7 +41,10 @@ export class ShoppingCartComponent implements OnInit{
             const items = cartState.shoppingCart.items;
 
             const total = items.reduce(
-              (acc, item) => acc + item.product.productPrice.price * item.quantity,
+              (acc, item) =>
+                item.selected
+                  ? acc + item.product.productPrice.price * item.quantity
+                  : acc,
               0
             );
 

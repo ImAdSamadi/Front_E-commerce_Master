@@ -21,10 +21,10 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
 
-  placeOrder(customerId: string, shippingAddress: string): Observable<string> {
+  placeOrder(createOrderRequest: any): Observable<string> {
     return this.http.post(
-      `${this.orderUrl}/api/v1/orders/${customerId}`,
-      shippingAddress,
+      `${this.orderUrl}/api/v1/orders`,
+      createOrderRequest,
       { responseType: 'text' }  // <== important to get plain text response
     );
   }
@@ -61,7 +61,7 @@ export class OrderService {
 
 
   listenForApprovalUrl(orderId: string): EventSource {
-    return new EventSource(`${this.orderUrl}/api/v1/orders/${orderId}/events`);
+    return new EventSource(`${this.paymentUrl}/api/v1/payments/${orderId}/events`);
   }
 
   captureOrder(captureRequest: any) {
