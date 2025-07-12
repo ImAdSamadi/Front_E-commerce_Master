@@ -3,7 +3,7 @@ import {ProductPrice} from "./product.model";
 export interface Orders {
   orderId: string;
   customerId: string;
-  items: OrderItem[];
+  products: OrderItem[];
   totalPrice: number;
   status: string;
   createdAt: string;

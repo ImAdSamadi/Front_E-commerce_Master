@@ -53,7 +53,7 @@ export class OrderService {
       params.status = status;
     }
 
-    return this.http.get<PagedResponse<Orders>>(`${this.orderUrl}/api/v1/orders/customer/${customerId}`, { params });
+    return this.http.get<PagedResponse<Orders>>(`${this.orderUrl}/api/v1/orders/customerOrders/${customerId}`, { params });
   }
 
 
