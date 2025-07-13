@@ -40,39 +40,77 @@
 
           <!-- Cart Summary -->
           <div class="col-lg-4">
-            <form class="mb-30" action="">
+
+            <ng-container *ngIf="(subtotal$ | async) as subtotal">
+              <ng-container *ngIf="subtotal > 0">
+
+            <form (ngSubmit)="applyCoupon()" [formGroup]="couponForm" class="mb-30">
               <div class="input-group">
-                <input type="text" class="form-control border-0 p-4" placeholder="Coupon Code" />
+                <input
+                  type="text"
+                  formControlName="code"
+                  class="form-control border-0 p-4"
+                  placeholder="Coupon Code"
+                />
                 <div class="input-group-append">
-                  <button class="btn btn-primary"><strong>Apply Coupon</strong></button>
+                  <button class="btn btn-primary" type="submit">
+                    <strong>Apply Coupon</strong>
+                  </button>
                 </div>
               </div>
             </form>
+
 
             <h5 class="section-title position-relative text-uppercase mb-3">
               <span class="bg-secondary pr-3">Cart Summary</span>
             </h5>
             <div class="bg-light p-30 mb-5">
+
               <div class="border-bottom pb-2">
+                <!-- Subtotal -->
                 <div class="d-flex justify-content-between mb-3">
                   <h6>Subtotal</h6>
-                  <h6 *ngIf="total$ | async as total">{{ total }}</h6>
+                  <h6 *ngIf="(subtotal$ | async) as subtotal">
+                    <ng-container *ngIf="(currencySymbol$ | async) as symbol">
+                      {{ symbol }}{{ subtotal.toFixed(2) }}
+                    </ng-container>
+                  </h6>
                 </div>
+
+                <!-- Coupon Discount -->
+                <div class="d-flex justify-content-between mb-3" *ngIf="coupon$ | async as coupon">
+                  <h6>Discount</h6>
+                  <h6 >
+                    - {{ coupon.currency }}{{ coupon.discountAmount.toFixed(2) }}
+                  </h6>
+                </div>
+
+                <!-- Shipping -->
                 <div class="d-flex justify-content-between">
                   <h6 class="font-weight-medium">Shipping</h6>
                   <h6 class="font-weight-medium">$0</h6>
                 </div>
               </div>
+
+              <!-- Total -->
               <div class="pt-2">
                 <div class="d-flex justify-content-between mt-2">
                   <h5>Total</h5>
                   <h5 *ngIf="total$ | async as total">{{ total }}</h5>
                 </div>
-                <button class="btn btn-block btn-primary font-weight-bold my-3 py-3" (click)="onCheckout()"
-                >Proceed To Checkout</button>
+                <button
+                  class="btn btn-block btn-primary font-weight-bold my-3 py-3"
+                  (click)="onCheckout()"
+                >
+                  Proceed To Checkout
+                </button>
               </div>
             </div>
-          </div>
+
+              </ng-container>
+            </ng-container>
+
+            </div>
         </div>
       </div>
     </ng-template>
@@ -82,3 +120,54 @@
     <h1>data is loaded with error : / {{state.errorMessage}}  /</h1>
   </ng-container>
 </ng-container>
+
+
+<!-- Coupon Animation Modal -->
+<div
+  *ngIf="showCouponAnimation"
+  class="coupon-modal d-flex justify-content-center align-items-center"
+>
+  <div class="text-center">
+    <!-- 🎁 Gift Box -->
+    <div class="gift-box mx-auto mb-3" [ngClass]="{ 'explode': exploded }"></div>
+
+    <!-- 💳 Coupon Card -->
+    <div *ngIf="exploded">
+      <ng-container *ngIf="coupon$ | async as coupon">
+
+
+        <div class="pro-coupon-ticket mx-auto">
+          <div class="ticket-left">
+            <div class="circle-cut top"></div>
+            <div class="circle-cut bottom"></div>
+          </div>
+
+          <div class="ticket-body">
+            <div class="ticket-header">
+              <h4 class="text-success">🎉 Coupon Unlocked!</h4>
+              <p class="coupon-code">Code: <strong>{{ coupon.code }}</strong></p>
+            </div>
+
+            <div class="ticket-amount">
+              <span class="currency">{{ coupon.currency }}</span>
+              <span class="amount">{{ coupon.discountAmount.toFixed(2) }}</span>
+            </div>
+
+            <div class="ticket-footer">
+              <span>Valid until:</span>
+              <span class="exp">{{ coupon.expirationDate || 'N/A' }}</span>
+            </div>
+          </div>
+
+          <div class="ticket-right">
+            <div class="circle-cut top"></div>
+            <div class="circle-cut bottom"></div>
+          </div>
+        </div>
+
+
+      </ng-container>
+    </div>
+  </div>
+</div>
+

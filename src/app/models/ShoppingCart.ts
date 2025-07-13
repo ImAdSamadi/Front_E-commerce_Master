@@ -3,7 +3,7 @@ import {Product, ProductPrice} from "./product.model";
 export interface ShoppingCart {
   id:string ,
   customerId: string,
-  items: ShoppingCartItem[]
+  items: ShoppingCartItem[],
 }
 
 export interface ShoppingCartItem{

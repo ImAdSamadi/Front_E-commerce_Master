@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {OrderService} from "../../services/ordersService/order.service";
 import {SecurityService} from "../../security/security.service";
 import {ShoppingCartService} from "../../services/shoppingCartService/shopping-cart.service";
-import {map, Observable} from "rxjs";
+import {combineLatest, map, Observable} from "rxjs";
 import {ShoppingCartState} from "../../ngrx/ShoppingCartState/cart.reducer";
 import {DataStateEnum} from "../../ngrx/productsState/products.reducer";
 import {Store} from "@ngrx/store";
@@ -10,6 +10,7 @@ import {CheckoutService} from "../../services/checkoutService/checkout.service";
 import {FilterRequestPayload, PageSize} from "../../models/common.model";
 import {GetProductsPageAction} from "../../ngrx/productsState/product.actions";
 import {Router} from "@angular/router";
+import {Coupon, CouponService} from "../../services/checkoutService/coupon.service";
 
 @Component({
   selector: 'app-checkout',
@@ -44,9 +45,9 @@ export class CheckoutComponent implements OnInit {
 
   useDifferentShipping = false;
 
-  shoppingCart$?:Observable<ShoppingCartState>
+  // shoppingCart$?:Observable<ShoppingCartState>
   public readonly cartDataState = DataStateEnum;
-  total$?: Observable<string>;
+  // total$?: Observable<string>;
 
   loading = false;
   error: string | null = null;
@@ -54,45 +55,102 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private customerService: ShoppingCartService,
     private store: Store<any>, private router: Router,
-    private orderService: OrderService,
+    private orderService: OrderService, private couponService: CouponService,
     private checkoutService: CheckoutService,
     public securityService: SecurityService
   ) {}
+
+  // ngOnInit(): void {
+  //   this.loadCustomerData();
+  //
+  //   this.shoppingCart$ = this.store.pipe(
+  //     map(state => state.shoppingCartState)
+  //   )
+  //
+  //   this.total$ = this.shoppingCart$.pipe(
+  //     map(cartState => {
+  //       if (
+  //         cartState.dataState === this.cartDataState.LOADED &&
+  //         cartState.shoppingCart?.items?.length
+  //       ) {
+  //         const items = cartState.shoppingCart.items;
+  //
+  //         const total = items.reduce(
+  //           (acc, item) =>
+  //             item.selected
+  //               ? acc + item.product.productPrice.price * item.quantity
+  //               : acc,
+  //           0
+  //         );
+  //
+  //         const symbol = items[0].product.productPrice.symbol || '';
+  //
+  //         return `${symbol}${total}`;
+  //       }
+  //
+  //       // Not loaded or empty
+  //       return '';
+  //     })
+  //   );
+  //
+  // }
+
+
+  shoppingCart$!: Observable<ShoppingCartState>;
+  subtotal$!: Observable<number>;
+  currencySymbol$!: Observable<string>;
+  total$!: Observable<string>;
+  coupon$!: Observable<Coupon>;
+
 
   ngOnInit(): void {
     this.loadCustomerData();
 
     this.shoppingCart$ = this.store.pipe(
       map(state => state.shoppingCartState)
-    )
+    );
 
-    this.total$ = this.shoppingCart$.pipe(
+    this.subtotal$ = this.shoppingCart$.pipe(
       map(cartState => {
         if (
           cartState.dataState === this.cartDataState.LOADED &&
           cartState.shoppingCart?.items?.length
         ) {
-          const items = cartState.shoppingCart.items;
-
-          const total = items.reduce(
-            (acc, item) =>
-              item.selected
-                ? acc + item.product.productPrice.price * item.quantity
-                : acc,
-            0
-          );
-
-          const symbol = items[0].product.productPrice.symbol || '';
-
-          return `${symbol}${total}`;
+          return cartState.shoppingCart.items
+            .filter(item => item.selected)
+            .reduce(
+              (acc, item) =>
+                acc + item.product.productPrice.price * item.quantity,
+              0
+            );
         }
+        return 0;
+      })
+    );
 
-        // Not loaded or empty
-        return '';
+    this.currencySymbol$ = this.shoppingCart$.pipe(
+      map(cartState =>
+        cartState.shoppingCart?.items?.[0]?.product.productPrice.symbol || ''
+      )
+    );
+
+    this.coupon$ = this.couponService.getCoupon$();
+
+    this.total$ = combineLatest([
+      this.subtotal$,
+      this.currencySymbol$,
+      this.coupon$
+    ]).pipe(
+      map(([subtotal, symbol, coupon]) => {
+        const discount = coupon.discountAmount ?? 0;
+        const final = Math.max(0, subtotal - discount);
+        return `${symbol}${final.toFixed(2)}`;
       })
     );
 
   }
+
+
 
   loadCustomerData() {
     this.customerService.getCustomerById(this.customerId!).subscribe({

@@ -1,0 +1,145 @@
+/* Coupon modal full-screen overlay */
+.coupon-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1050;
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Gift Box */
+.gift-box {
+  width: 350px;
+  height: 350px;
+  background: url('/assets/template/img/gift-box.png') no-repeat center center;
+  background-size: contain;
+  animation: shake 0.6s ease-in-out;
+}
+
+.gift-box.explode {
+  animation: explode 0.5s forwards;
+  background: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Keyframe animations */
+@keyframes shake {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(4deg); }
+  50% { transform: rotate(-4deg); }
+  75% { transform: rotate(4deg); }
+}
+
+@keyframes explode {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Pro Coupon Ticket Layout */
+.pro-coupon-ticket {
+  display: flex;
+  align-items: stretch;
+  width: 360px;
+  background: linear-gradient(to right, #f5f5f5, #f5f5f5); /* ✅ your background */
+  border: 2px dashed #28a745;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  animation: fadeInUp 0.6s ease forwards;
+  color: #333; /* Switch back to dark text */
+}
+
+.ticket-left,
+.ticket-right {
+  width: 20px;
+  position: relative;
+  background: linear-gradient(to right, #f5f5f5, #f5f5f5); /* ✅ match ticket */
+}
+
+.circle-cut {
+  width: 40px;
+  height: 40px;
+  background: #f5f5f5; /* Or: background: inherit; */
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.ticket-left .top,
+.ticket-right .top {
+  top: -20px;
+}
+.ticket-left .bottom,
+.ticket-right .bottom {
+  bottom: -20px;
+}
+
+.ticket-body {
+  flex: 1;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ticket-header h4 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #28a745;
+}
+
+.coupon-code {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 0.25rem;
+}
+
+.ticket-amount {
+  margin: 1rem 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.ticket-amount .currency {
+  font-size: 1.2rem;
+  vertical-align: top;
+  color: #28a745;
+}
+
+.ticket-footer {
+  font-size: 0.8rem;
+  color: #666;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.ticket-footer .exp {
+  font-weight: 500;
+}
+
+
+/* 3D hover effect */
+.pro-coupon-ticket:hover {
+  transform: perspective(800px) rotateX(2deg) rotateY(-3deg);
+  transition: transform 0.4s ease;
+}
