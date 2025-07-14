@@ -181,7 +181,7 @@
                 alt="PayPal"
                 style="height: 20px; vertical-align: middle; margin: 0 5px;"
               />
-              Total: {{ order.totalPrice | currency }}
+              Total: {{ order.totalPrice | currency }} - {{ order.discountAmount | currency }}
             </strong>
           </div>
         </div>

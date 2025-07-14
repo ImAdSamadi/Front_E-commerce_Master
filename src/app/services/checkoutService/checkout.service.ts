@@ -9,6 +9,7 @@ export interface CustomerInfo {
   lastName: string
   receiverFullName: string
   receiverEmail: string
+  couponCode: string
 
 }
 

@@ -5,6 +5,7 @@ export interface Orders {
   customerId: string;
   products: OrderItem[];
   totalPrice: number;
+  discountAmount: number;
   status: string;
   createdAt: string;
   updatedAt: string;

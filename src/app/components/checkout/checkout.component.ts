@@ -186,8 +186,13 @@ export class CheckoutComponent implements OnInit {
       shippingAddress: '',
       customerId: this.securityService.profile.id!,
       receiverFullName: '',
-      receiverEmail: ''
+      receiverEmail: '',
+      couponCode: ''
     };
+
+    this.coupon$.subscribe(coupon => {
+      customerInfo.couponCode = coupon.code
+    });
 
     if (this.useDifferentShipping) {
       // Shipping address from shipping form
@@ -207,20 +212,31 @@ export class CheckoutComponent implements OnInit {
 
     if (this.customerId) {
 
-      const createOrderRequest = {
-        customerId: this.securityService.profile.id!,
-        shippingAddress: customerInfo.shippingAddress,
-        receiverFullName: customerInfo.receiverFullName,
-        receiverEmail: customerInfo.receiverEmail
-      };
+      // const createOrderRequest = {
+      //   customerId: this.securityService.profile.id!,
+      //   shippingAddress: customerInfo.shippingAddress,
+      //   receiverFullName: customerInfo.receiverFullName,
+      //   receiverEmail: customerInfo.receiverEmail,
+      // };
 
-      this.orderService.placeOrder(createOrderRequest).subscribe({
-        next: (orderId) => this.waitForApprovalUrl(orderId),
-        error: (err) => {
-          this.loading = false;
-          this.error = 'Order failed. Try again.';
-          console.error(err);
-        }
+      this.coupon$.subscribe(coupon => {
+        const createOrderRequest = {
+          customerId: this.securityService.profile.id!,
+          shippingAddress: customerInfo.shippingAddress,
+          receiverFullName: customerInfo.receiverFullName,
+          receiverEmail: customerInfo.receiverEmail,
+          couponCode: coupon.code
+        };
+
+        this.orderService.placeOrder(createOrderRequest).subscribe({
+          next: (orderId) => this.waitForApprovalUrl(orderId),
+          error: (err) => {
+            this.loading = false;
+            this.error = 'Order failed. Try again.';
+            console.error(err);
+          }
+        });
+
       });
 
 

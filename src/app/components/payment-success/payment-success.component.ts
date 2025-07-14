@@ -65,7 +65,8 @@ export class PaymentSuccessComponent implements OnInit {
       firstName: customerInfo.firstName,
       lastName: customerInfo.lastName,
       receiverFullName: customerInfo.receiverFullName,
-      receiverEmail: customerInfo.receiverEmail
+      receiverEmail: customerInfo.receiverEmail,
+      couponCode: customerInfo.couponCode
 
     };
 

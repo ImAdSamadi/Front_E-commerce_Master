@@ -148,6 +148,7 @@
                 class="d-flex py-1 border-0"
                 style="border-bottom: 1px dashed #ddd;"
               >
+<!--                <ng-container *ngIf="item.selected">-->
                 <!-- Product Name + Quantity (70%) -->
                 <div class="flex-grow-1">
                   <span class="d-block">{{ item.product.name }}</span>
@@ -156,10 +157,11 @@
 
                 <!-- Total Price (30%) aligned right -->
                 <div class="text-right" style="min-width: 100px;">
-          <span>
-            {{ item.product.productPrice.symbol }}{{ item.product.productPrice.price * item.quantity | number: '1.2-2' }}
-          </span>
+                <span>
+                  {{ item.product.productPrice.symbol }}{{ item.product.productPrice.price * item.quantity | number: '1.2-2' }}
+                </span>
                 </div>
+<!--                </ng-container>-->
               </div>
             </ng-container>
 
